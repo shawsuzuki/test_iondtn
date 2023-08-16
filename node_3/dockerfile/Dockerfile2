@@ -1,0 +1,28 @@
+FROM ubuntu:20.04
+#なんのイメージを使って作るかを指定
+
+#RUNはコマンドを実行したいとき
+EXPOSE 22 5963 5001
+#EXPOSEはポート開く
+#RUN ip a
+#RUN which iperf3
+
+RUN apt update
+RUN apt install build-essential -y
+RUN apt install wget -y
+RUN wget https://sourceforge.net/projects/ion-dtn/files/ion-open-source-4.1.2.tar.gz/download
+RUN tar xzvf download
+WORKDIR /ion-open-source-4.1.2
+RUN ./configure
+RUN make
+RUN make install
+RUN ldconfig
+
+RUN mkdir dtn
+WORKDIR /dtn
+
+RUN apt-get update && apt-get install -y iputils-ping net-tools
+RUN killm
+RUN ionstart -I host150.rc
+
+RUN apt install tcpdump

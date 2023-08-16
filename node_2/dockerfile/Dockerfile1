@@ -1,0 +1,35 @@
+FROM ubuntu:20.04
+#なんのイメージを使って作るかを指定
+
+# install pkg
+#RUN apk add --no-cache iperf3 
+#RUNはコマンドを実行したいとき
+EXPOSE 22 5963 5001
+#EXPOSEはポート開く
+#RUN ip a
+#RUN which iperf3
+
+RUN apt update
+RUN apt install build-essential -y
+RUN apt install wget -y
+RUN wget https://sourceforge.net/projects/ion-dtn/files/ion-open-source-4.1.2.tar.gz/download
+RUN tar xzvf download
+WORKDIR /ion-open-source-4.1.2
+RUN ./configure
+RUN make
+RUN make install
+RUN ldconfig
+
+RUN mkdir dtn
+WORKDIR /dtn
+
+RUN killm
+RUN ionstart -I host149.rc 
+RUN ss -panu -> results_panu.txt
+RUN ipcs -> results_ipcs.txt
+RUN echo "Hello, World!" | bpsource ipn:149.1
+RUN bpsink ipn:149.1 -> results_bpsink
+
+
+ 
+
