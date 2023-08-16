@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  dtn-server-1:
+    build:
+      context: ./
+      dockerfile: dockerfile/Dockerfile1
+    container_name: "dtn1"
+    ports:
+      - "50001:5001/tcp"
+      - "50001:5001/udp"
+    volumes:
+      - ./host149.rc:/host149.rc
+    networks:
+      fixed_compose_network:
+        ipv4_address: 172.20.0.3
+    tty: true
+
+  dtn-server-2:
+    build:
+      context: ./
+      dockerfile: dockerfile/Dockerfile2
+    container_name: "dtn2"
+    ports:
+      - "50002:5001/tcp"
+      - "50002:5001/udp"
+    volumes:
+      - ./host150.rc:/host150.rc
+    networks:
+      fixed_compose_network:
+        ipv4_address: 172.20.0.4  # コンテナに割り当てるIPv4アドレス
+    tty: true
+
+networks:
+  fixed_compose_network:
+    driver: bridge
