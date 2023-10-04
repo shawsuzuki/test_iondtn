@@ -1,0 +1,2 @@
+This test exericse custody tranfer under BP version 6 only. Custody transfer for BP version 7 uses bibect mechanism, which is covered under a separate test.
+

@@ -1,0 +1,59 @@
+## begin ionadmin 
+#ノード間のコンタクト情報を設定
+1 149 ''
+s
+
+# a contact 行は、2つのノード間のコンタクト情報を示す。
+# +1 +3600 149 149 100000 は、ノード 149 とノード 149 の間で、
+# 1秒ごとに通信可能で、通信コストが 100000 ということ。
+a contact +1 +3600 149 149 100000
+a contact +1 +3600 149 150 100000
+a contact +1 +3600 150 149 100000
+a contact +1 +3600 150 150 100000
+
+# a range 行は、特定のコンタクト間との通信が可能な時間範囲を示す。
+# a range +1 +3600 149 149 1 はノード 149 とノード 149 の間での
+# コンタクトが、現在の時刻から1時間後まで有効であることを示す。
+a range +1 +3600 149 149 1
+a range +1 +3600 149 150 1
+a range +1 +3600 150 149 1
+a range +1 +3600 150 150 1
+
+m production 1000000
+m consumption 1000000
+## end ionadmin 
+
+## begin ltpadmin 
+# LTPスパンやエンドポイントの設定
+# udplso 172.16.123.149:1113' はLTPスパンを UDP/IP プロトコルで
+# 172.16.123.149 のポート 1113 に設定することを示す。
+1 32
+a span 149 32 32 1400 10000 1 'udplso 172.16.238.2:1113' 300
+a span 150 32 32 1400 10000 1 'udplso 172.16.238.3:1113' 300
+s 'udplsi 172.16.238.2:1113'
+## end ltpadmin 
+
+## begin bpadmin 
+#バンドルプロトコルの設定
+# a scheme 行は、バンドルプロトコルのスキームを定義
+# a endpoint 行は、特定のエンドポイント（IPN アドレス） を設定
+# a protocol, a induct, a outduct 行は、プロトコルやインダクト（データの受信）・アウトダクト（データの送信）の設定
+1
+a scheme ipn 'ipnfw' 'ipnadminep'
+a endpoint ipn:149.0 q
+a endpoint ipn:149.1 q
+a endpoint ipn:149.2 q
+a endpoint ipn:150.0 q
+a protocol ltp 1400 100
+a induct ltp 149 ltpcli
+a outduct ltp 149 ltpclo
+a outduct ltp 150 ltpclo
+s
+## end bpadmin 
+
+## begin ipnadmin
+# IPN アドレスのプラン設定 
+a plan 149 ltp/149
+a plan 150 ltp/150
+
+## end ipnadmin 

@@ -1,0 +1,48 @@
+#!/bin/bash
+#
+# ionstop
+# David Young
+# Aug 20, 2008
+#
+# will quickly and completely stop an ion node.
+
+ION_OPEN_SOURCE=1
+
+echo "IONSTOP will now stop ion and clean up the node for you..."
+if [ "$ION_OPEN_SOURCE" == "1" ]; then
+echo "cfdpadmin ."
+cfdpadmin .
+sleep 1
+fi
+bpversion
+if [ $? -eq 6 ]; then
+echo "acsadmin ."
+acsadmin .
+sleep 1
+fi
+echo "bpadmin ."
+bpadmin .
+sleep 1
+echo "ltpadmin ."
+ltpadmin .
+sleep 1
+echo "ionadmin ."
+ionadmin .
+sleep 1
+echo "bsspadmin ."
+bsspadmin .
+sleep 1
+
+# Check for multi-ION instances
+if [ -z "${ION_NODE_LIST_DIR}" ];
+then
+    echo "This is a single-ION instance configuration. Run killm."
+    sleep 1
+    echo "killm"
+    killm
+else
+    echo "This is a multi-ION instance configuration. Killm not used."
+    echo "You can execute 'killm' to mannually to clear all shared memory segments if necessary."
+fi
+
+echo "ION node ended. Log file: ion.log"

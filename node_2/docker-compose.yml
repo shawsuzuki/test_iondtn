@@ -9,11 +9,11 @@ services:
     ports:
       - "50001:5001/tcp"
       - "50001:5001/udp"
-    volumes:
-      - ./host149.rc:/host149.rc
     networks:
       fixed_compose_network:
-        ipv4_address: 172.20.0.3
+        ipv4_address: 172.16.238.2
+    volumes: 
+      - ./dtnconf/host149.rc:/dtnconf/host149.rc
     tty: true
 
   dtn-server-2:
@@ -24,13 +24,16 @@ services:
     ports:
       - "50002:5001/tcp"
       - "50002:5001/udp"
-    volumes:
-      - ./host150.rc:/host150.rc
     networks:
       fixed_compose_network:
-        ipv4_address: 172.20.0.4  # コンテナに割り当てるIPv4アドレス
+        ipv4_address: 172.16.238.3
+    volumes: 
+      - ./dtnconf/host150.rc:/dtnconf/host150.rc
     tty: true
 
 networks:
   fixed_compose_network:
-    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.238.0/24
